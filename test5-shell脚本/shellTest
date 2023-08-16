@@ -1,0 +1,108 @@
+#!/bin/bash 
+readonly num=10 # 只读类型,变量默认是字符串类型的，变量相加需要转化
+num2=10
+declare -i num3=$num+$num2 # declare -i命令就是转化为int类型
+echo -e "num=$num3"
+echo $# # 查看shell脚本有几个参数
+echo $* # 查看传给参数的内容
+echo $1,$2,$3 #查看第123个参数
+# $?是判断是否执行成功，成功返回0，不成功返回非零的数
+echo $0 # 查看当前进程的名称
+echo $$ # 查看当前进程的pid
+# env #查看所有环境变量
+# export # 用于全局变量或者修改动态链接库
+echo ${no:-20} # 如果no存在输出no值不存在输出val值也就是20
+echo ${no:=20} # 如果no存在输出no值不存在输出val值并且把val赋给no变量
+echo $no
+declare str="hello worldwor"
+echo "字符串长度为 ${#str}" # ${#str} 获取字符串长度
+echo ${str:1:4} # 获取第一个到第四个之间的字符
+echo ${str/wor/111} # 把wor改成111 进行这些操作不会修改str的值
+echo ${str//wor/111} # 有两个wor就加两个/
+test -e shellTest # -e 判断是否存在 -d是否为目录 -f是否为普通文件 -r是否可读 -w是否可写 -x是否可执行
+[ -e shellTest ] #第二种方法中括号后必须要有空格
+echo $? # 输出0正确，非零错误
+[ -z "$str" ] # -z判断是不是空字符串
+echo $?
+[ -n "$str" ] # -n判断是不是不是空字符串
+echo $?
+declare str2="hello worldwor"
+[ "$str"x=="$str2"x ] # 加上x是防止某些版本的bash对于空字符的比较可能会报错
+echo $?
+read -p "place input name : " fileName # 键盘录入的操作
+if [ -e "$fileName" ]; then # if嵌套case语句
+    echo "the file is exist"
+    case "$fileName" in # 判断目标是$fileName
+        "num1.txt" | "num2.txt") #这是判断条件
+            echo "method one to deal with num1.txt or num2.txt"
+            ;; # 结束语句
+        "sun1.txt" | "sum2.txt")
+            echo "method one to deal with sum1.txt or sum2.txt"
+            ;;
+        *) # 类似default
+            echo "using other method deal with file"
+    esac # 结束把case反着写
+elif [ -z "$fileName" ]; then
+    echo "the file is empty"
+else
+    echo "the file is not exsit"
+fi # 结束把if反着写
+
+
+# 循环
+declare -i sum=0
+declare -i i
+for ((i=0; i<100; i++)) 
+    do
+        sum+=$i
+    done
+echo $sum
+for i in 1 2 3 4 5 6
+    do
+        sum+=$i
+    done
+echo $sum
+declare -i j=0
+while [ "$j" -lt 10 ] # while加条件的格式
+    do
+        echo $j
+        j+=1
+    done
+while read -p "place input file name : " filename # while加语句的格式可以代替c++中的while（1）
+    do
+        if [ -e $filename ]; then
+            echo "deal with file"
+        elif [ "$filename"=="exit" ]; then
+            break
+        else
+            echo " place input exist file name again "
+        fi
+    done
+function toc()
+{
+    # if [ -z "$1" ]; then #$1表示这个函数的参数
+
+    # fi
+    declare -i aum=0
+    for pram in $@ # $@表示参数列表
+        do
+            sum+=$pram
+        done
+    echo $aum
+}
+aum=$(toc 11 22 33 24)
+case $? in # $?代表函数返回值
+    0)
+        ;;
+    1)
+        echo "parameter one is zero"
+        ;;
+    2)
+        echo 2222
+        ;;
+    *)
+        echo "unknow error"
+        ;;
+esac
+echo $aum
+
